@@ -29,11 +29,13 @@ app.get('/', (req, res) => {
 });
 
 app.post('/stop', (req, res) => {
-    exec('docker-compose down --rmi all', (err, stdout, stderr) => {
+    // Directly run the script as it's in the same environment
+    exec('./stop_all_containers.sh &', (err, stdout, stderr) => {
         if (err) {
-            return res.status(500).send(err);
+            console.error("Error stopping containers:", stderr);
+            return res.status(500).send("Error stopping containers.");
         }
-        return res.send('Services stopped');
+        res.send(stdout || "All containers stopped successfully.");
     });
 });
 
