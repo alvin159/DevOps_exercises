@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script>
+        async function requestService() {
+            try {
+                const response = await fetch("/api"); // Pointing to the API
+                if (!response.ok) {
+                    const errorData = await response.text(); // Get the error response
+                    console.error("Error response:", errorData);
+                    alert("Service unavailable. Try again later.");
+                    return;
+                }
+                const data = await response.json();
+                document.getElementById("responseArea").value = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error("Fetch error:", error);
+                alert("An error occurred while fetching the service data.");
+            }
+        }
+
+        async function stopServices() {
+            try {
+                const response = await fetch("/stop", { method: "POST" });
+                if (response.ok) {
+                    alert("Services stopped successfully.");
+                    window.location.href = "/"; // Redirect to home or refresh
+                } else {
+                    const errorData = await response.text(); // Get the error response
+                    alert(errorData);
+                }
+            } catch (error) {
+                alert("An error occurred while stopping the services.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Dashboard</h2>
+    <button onclick="requestService()">REQUEST</button>
+    <button onclick="stopServices()">STOP</button>
+    <textarea id="responseArea" rows="10" cols="50"></textarea>
+</body>
+</html>

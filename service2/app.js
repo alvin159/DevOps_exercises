@@ -28,6 +28,15 @@ app.get('/', (req, res) => {
     });
 });
 
+app.post('/stop', (req, res) => {
+    exec('docker-compose down --rmi all', (err, stdout, stderr) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        return res.send('Services stopped');
+    });
+});
+
 app.listen(port, () => {
     console.log(`Service2 listening at http://localhost:${port}`);
 });
