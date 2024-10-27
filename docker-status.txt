@@ -1,8 +1,13 @@
-CONTAINER ID   IMAGE                COMMAND                  CREATED         STATUS         PORTS                                       NAMES
-ba654b400000   exercise1_service1   "python app.py"          2 minutes ago   Up 2 minutes   0.0.0.0:8199->8199/tcp, :::8199->8199/tcp   exercise1_service1_1
-dc7b50e893cf   exercise1_service2   "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes                                               exercise1_service2_1
-NETWORK ID     NAME                DRIVER    SCOPE
-a7a2b7de9a3b   bridge              bridge    local
-6dcc9cda65e0   exercise1_default   bridge    local
-7830ae045fe8   host                host      local
-29204bb00190   none                null      local
+CONTAINER ID   IMAGE                         COMMAND                  CREATED         STATUS                            PORTS                            NAMES
+c0771944a0ab   devops_exercises-service2     "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes                                                       devops_exercises-service2-1
+ff08586459b3   nginx:latest                  "/docker-entrypoint.…"   7 hours ago     Up 2 minutes                      80/tcp, 0.0.0.0:8081->8081/tcp   devops_exercises-nginx-1
+ed2084e0da50   devops_exercises-service1_2   "python app.py"          7 hours ago     Up 2 minutes                      0.0.0.0:50874->8199/tcp          devops_exercises-service1_2-1
+43835627de10   devops_exercises-service1_3   "python app.py"          7 hours ago     Up 2 minutes                      0.0.0.0:50873->8199/tcp          devops_exercises-service1_3-1
+6a912b06a668   devops_exercises-service1_1   "python app.py"          7 hours ago     Up 2 minutes                      0.0.0.0:50876->8199/tcp          devops_exercises-service1_1-1
+
+NETWORK ID     NAME                         DRIVER    SCOPE
+b2b668c007b9   bridge                       bridge    local
+14f75057dc19   devops_exercises_default     bridge    local
+28146f20f6d8   host                         host      local
+180b129e151e   new_default                  bridge    local
+570eee877250   none                         null      local
