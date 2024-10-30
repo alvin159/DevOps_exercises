@@ -1,9 +1,9 @@
 CONTAINER ID   IMAGE                         COMMAND                  CREATED         STATUS                            PORTS                            NAMES
 c0771944a0ab   devops_exercises-service2     "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes                                                       devops_exercises-service2-1
-ff08586459b3   nginx:latest                  "/docker-entrypoint.…"   7 hours ago     Up 2 minutes                      80/tcp, 0.0.0.0:8081->8081/tcp   devops_exercises-nginx-1
-ed2084e0da50   devops_exercises-service1_2   "python app.py"          7 hours ago     Up 2 minutes                      0.0.0.0:50874->8199/tcp          devops_exercises-service1_2-1
-43835627de10   devops_exercises-service1_3   "python app.py"          7 hours ago     Up 2 minutes                      0.0.0.0:50873->8199/tcp          devops_exercises-service1_3-1
-6a912b06a668   devops_exercises-service1_1   "python app.py"          7 hours ago     Up 2 minutes                      0.0.0.0:50876->8199/tcp          devops_exercises-service1_1-1
+ff08586459b3   nginx:latest                  "/docker-entrypoint.…"   7 hours ago     Up 2 minutes                      80/tcp, 0.0.0.0:8198->8198/tcp   devops_exercises-nginx-1
+ed2084e0da50   devops_exercises-service1_2   "python app.py"          7 hours ago     Up 2 minutes                      0.0.0.0:50874->8198/tcp          devops_exercises-service1_2-1
+43835627de10   devops_exercises-service1_3   "python app.py"          7 hours ago     Up 2 minutes                      0.0.0.0:50873->8198/tcp          devops_exercises-service1_3-1
+6a912b06a668   devops_exercises-service1_1   "python app.py"          7 hours ago     Up 2 minutes                      0.0.0.0:50876->8198/tcp          devops_exercises-service1_1-1
 
 NETWORK ID     NAME                         DRIVER    SCOPE
 b2b668c007b9   bridge                       bridge    local

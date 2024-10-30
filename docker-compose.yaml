@@ -7,7 +7,7 @@ services:
       - ./.htpasswd:/etc/nginx/.htpasswd
       - ./html:/html 
     ports:
-      - "8081:8081"
+      - "8198:8198"
     depends_on:
       - service1_1
       - service1_2
@@ -18,7 +18,7 @@ services:
     build:
       context: ./service1
     ports:
-      - "8199"
+      - "8198"
     environment:
       - INSTANCE=1
 
@@ -26,7 +26,7 @@ services:
     build:
       context: ./service1
     ports:
-      - "8199"
+      - "8198"
     environment:
       - INSTANCE=2
 
@@ -34,7 +34,7 @@ services:
     build:
       context: ./service1
     ports:
-      - "8199"
+      - "8198"
     environment:
       - INSTANCE=3
 
