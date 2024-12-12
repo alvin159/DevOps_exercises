@@ -15,13 +15,10 @@ variables:
   DOCKER_HOST: unix:///var/run/docker.sock
 
 before_script:
-  - apk add --no-cache curl
-  - echo "Checking Docker version..."
-  - docker --version
-  - echo "Checking Docker info..."
+  - echo "Checking Docker service status..."
+  - if ! docker info > /dev/null 2>&1; then echo "Docker is not running. Starting Docker..."; service docker start; fi
+  - apk add --no-cache curl 
   - docker info
-  - echo "Checking Docker socket permissions..."
-  - ls -l /var/run/docker.sock
 
 build:
   stage: build
