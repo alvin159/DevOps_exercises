@@ -32,6 +32,6 @@ deploy:
   stage: deploy
   script:
     - echo "Deploying to production"
-    - ssh -i /path/to/Indomie.pem ubuntu@86.50.168.146 "cd /path/to/project && git pull && docker-compose -f docker-compose.yaml up -d"
+    - ssh -i /home/alvin/.ssh/Indomie.pem ubuntu@86.50.168.146 "cd DevOps_exercises && git pull && docker-compose -f docker-compose.yaml up -d"
   only:
     - master
