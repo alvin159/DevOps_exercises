@@ -16,6 +16,12 @@ variables:
 
 before_script:
   - apk add --no-cache curl
+  - echo "Checking Docker version..."
+  - docker --version
+  - echo "Checking Docker info..."
+  - docker info
+  - echo "Checking Docker socket permissions..."
+  - ls -l /var/run/docker.sock
 
 build:
   stage: build
