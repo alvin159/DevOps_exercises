@@ -15,9 +15,9 @@ variables:
   DOCKER_HOST: unix:///var/run/docker.sock
 
 before_script:
-  - echo "Checking Docker service status..."
-  - apk add --no-cache curl 
-  - docker info
+    - echo "Testing Docker access"
+    - ls -l /var/run/docker.sock
+    - docker info
 
 build:
   stage: build
