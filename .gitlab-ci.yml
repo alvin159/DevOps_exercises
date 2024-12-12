@@ -13,6 +13,11 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_HOST: unix:///var/run/docker.sock
+  
+before_script:
+    - echo "Testing Docker access"
+    - ls -l /var/run/docker.sock
+    - docker info
 
 build:
   stage: build
