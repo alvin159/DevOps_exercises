@@ -7,7 +7,7 @@
     <script>
         async function requestService() {
             try {
-                const response = await fetch("/api"); // Pointing to the API
+                const response = await fetch("/request"); // Pointing to the request
                 if (!response.ok) {
                     const errorData = await response.text(); // Get the error response
                     console.error("Error response:", errorData);
