@@ -1,0 +1,37 @@
+stages:
+  - build
+  - test
+  - static_analysis
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+build:
+  stage: build
+  script:
+    - echo "Building Docker images"
+    - docker-compose -f docker-compose.yaml build
+
+test:
+  stage: test
+  script:
+    - echo "Running tests"
+    - pip install requests
+    - python -m unittest discover tests/
+
+static_analysis:
+  stage: static_analysis
+  script:
+    - echo "Running static analysis"
+    - pip install pylint
+    - pylint service1/app.py
+    - pylint service2/app.js
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying to production"
+    - ssh -i /path/to/Indomie.pem ubuntu@86.50.168.146 "cd /path/to/project && git pull && docker-compose -f docker-compose.yaml up -d"
+  only:
+    - master

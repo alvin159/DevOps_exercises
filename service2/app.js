@@ -28,16 +28,17 @@ app.get('/', (req, res) => {
     });
 });
 
-
 app.post('/stop', (req, res) => {
-    exec('docker ps -q | xargs -I {} docker stop {}', (err, stdout, stderr) => {
+    exec('docker ps -q | xargs -r docker stop', (err, stdout, stderr) => {
         if (err) {
-            console.error("Error stopping containers:", stderr);
-            return res.status(500).send("Error stopping containers.");
+            console.error('Error stopping containers:', stderr);
+            return res.status(500).send('Error stopping containers.');
         }
-        res.send(stdout || "All containers stopped successfully.");
+        console.log('Containers stopped:', stdout);
+        res.send(stdout || 'All containers stopped successfully.');
     });
 });
+
 
 app.listen(port, () => {
     console.log(`Service2 listening at http://localhost:${port}`);
