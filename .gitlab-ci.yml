@@ -11,7 +11,7 @@ build:
   stage: build
   script:
     - echo "Building Docker images"
-    - sudo docker-compose -f docker-compose.yaml build
+    - docker-compose -f docker-compose.yaml build
 
 test:
   stage: test
