@@ -1,3 +1,9 @@
+image: docker:latest
+
+services:
+  - name: docker:20.10-dind
+    alias: docker
+
 stages:
   - build
   - test
@@ -6,6 +12,12 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
+  DOCKER_HOST: unix:///var/run/docker.sock
+  
+before_script:
+    - echo "Testing Docker access"
+    - ls -l /var/run/docker.sock
+    - docker info
 
 build:
   stage: build
@@ -34,4 +46,4 @@ deploy:
     - echo "Deploying to production"
     - ssh -i /home/alvin/.ssh/Indomie.pem ubuntu@86.50.168.146 "cd DevOps_exercises && git pull && docker-compose -f docker-compose.yaml up -d"
   only:
-    - master
+    - project
