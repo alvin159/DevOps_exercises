@@ -1,47 +1,33 @@
 stages:
   - build
   - test
-  - static_analysis
-  - deploy
+  - cleanup
 
-docker-build:
-  image: docker:stable
+variables:
+  DOCKER_HOST: unix:///var/run/docker.sock
+
+build:
   stage: build
-  services:
-    - name: docker:dind
-      alias: thedockerhost
-  variables:
-  # Tell docker CLI how to talk to Docker daemon; see
-  # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker-executor
-    DOCKER_HOST: tcp://thedockerhost:2375/
-    # Use the overlayfs driver for improved performance:
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - docker build -t "$CI_REGISTRY_IMAGE" .
-    - docker-compose build && docker-compose up
+    - echo "Building Docker images..."
+    - docker-compose build
 
 test:
   stage: test
   script:
-    - echo "Running tests"
-    - pip install requests
-    - python -m unittest discover tests/
+    - echo "Starting services for testing..."
+    - docker-compose up -d
+    - echo "Running tests..."
+    - cd tests
+    - npm install
+    - npm test
+  after_script:
+    - echo "Stopping services after tests..."
+    - docker-compose down
 
-static_analysis:
-  stage: static_analysis
+cleanup:
+  stage: cleanup
   script:
-    - echo "Running static analysis"
-    - pip install pylint
-    - pylint service1/app.py
-    - pylint service2/app.js
-
-deploy:
-  stage: deploy
-  script:
-    - echo "Deploying to production"
-    - ssh -i /home/alvin/.ssh/Indomie.pem ubuntu@86.50.168.146 "cd DevOps_exercises && git pull && docker-compose -f docker-compose.yaml up -d"
-  only:
-    - project
+    - echo "Cleaning up resources..."
+    - docker-compose down
+  when: always
