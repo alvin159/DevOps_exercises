@@ -1,0 +1,5 @@
+docker-compose build && docker-compose up
+
+curl localhost:8197/state -X PUT -d "RUNNING" -H "Content-Type: text/plain" -H "Accept: text/plain"
+curl localhost:8197/request
+curl localhost:8197/run-log
