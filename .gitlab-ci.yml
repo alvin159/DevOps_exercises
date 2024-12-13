@@ -5,13 +5,17 @@ stages:
   - deploy
 
 build-services:
-  
   stage: build
-  image: docker:latest  # this sets default image for jobs
+  image: docker:latest  # Use Docker image for the job
   services:
-  - docker:dind
+    - name: docker:dind
+      command: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]  # Mount the Docker socket
+  variables:
+    DOCKER_HOST: tcp://docker:2375  # Use the Docker-in-Docker service
+    DOCKER_TLS_CERTDIR: ""          # Disable TLS to use the Docker socket
   script:
     - docker-compose build
+
 
 test:
   stage: test
