@@ -3,6 +3,7 @@ image: docker:latest
 services:
   - name: docker:20.10-dind
     alias: docker
+    privileged: true
 
 stages:
   - build
@@ -12,8 +13,11 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: unix:///var/run/docker.sock
+  DOCKER_HOST: tcp://docker:2375
   
+before_script:
+  - while (! docker info > /dev/null 2>&1); do echo "Waiting for Docker daemon to start..."; sleep 1; done
+
 build:
   stage: build
   script:
