@@ -1,33 +1,33 @@
 stages:
   - build
   - test
-  - cleanup
+  - static_analysis
+  - deploy
 
-variables:
-  DOCKER_HOST: unix:///var/run/docker.sock
-
-build:
+build-services:
   stage: build
   script:
-    - echo "Building Docker images..."
-    - docker-compose build
+    - docker-compose build --no-cache
 
 test:
   stage: test
   script:
-    - echo "Starting services for testing..."
-    - docker-compose up -d
-    - echo "Running tests..."
-    - cd tests
-    - npm install
-    - npm test
-  after_script:
-    - echo "Stopping services after tests..."
-    - docker-compose down
+    - echo "Running tests"
+    - pip install requests
+    - python -m unittest discover tests/
 
-cleanup:
-  stage: cleanup
+static_analysis:
+  stage: static_analysis
   script:
-    - echo "Cleaning up resources..."
-    - docker-compose down
-  when: always
+    - echo "Running static analysis"
+    - pip install pylint
+    - pylint service1/app.py
+    - pylint service2/app.js
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying to production"
+    - ssh -i /home/alvin/.ssh/Indomie.pem ubuntu@86.50.168.146 "cd DevOps_exercises && git pull && docker-compose -f docker-compose.yaml up -d"
+  only:
+    - project
