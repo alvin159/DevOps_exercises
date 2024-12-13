@@ -14,16 +14,12 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_HOST: unix:///var/run/docker.sock
   
-before_script:
-    - echo "Testing Docker access"
-    - ls -l /var/run/docker.sock
-    - docker info
-
 build:
   stage: build
   script:
     - echo "Building Docker images"
-    - docker-compose -f docker-compose.yaml build
+    - docker-compose build && docker-compose up
+
 
 test:
   stage: test
