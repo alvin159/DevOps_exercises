@@ -3,7 +3,6 @@ image: docker:latest
 services:
   - name: docker:20.10-dind
     alias: docker
-    privileged: true
 
 stages:
   - build
