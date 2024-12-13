@@ -6,14 +6,17 @@ stages:
 
 build-services:
   stage: build
-  image: docker:latest  # Use Docker image for the job
+  image: docker:latest
   services:
     - name: docker:dind
-      command: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]  # Mount the Docker socket
+      command: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]
   variables:
-    DOCKER_HOST: tcp://docker:2375  # Use the Docker-in-Docker service
-    DOCKER_TLS_CERTDIR: ""          # Disable TLS to use the Docker socket
+    DOCKER_HOST: tcp://localhost:2375  # Updated to localhost for CI job
+    DOCKER_TLS_CERTDIR: ""             # Disable TLS to use the Docker daemon
+  before_script:
+    - apk add --no-cache docker-compose  # Ensure docker-compose is available
   script:
+    - docker info                       # Debug Docker connection
     - docker-compose build
 
 
