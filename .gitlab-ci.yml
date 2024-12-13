@@ -5,7 +5,11 @@ stages:
   - deploy
 
 build-services:
+  
   stage: build
+  image: docker:latest  # this sets default image for jobs
+  services:
+  - docker:dind
   script:
     - docker-compose build
 
