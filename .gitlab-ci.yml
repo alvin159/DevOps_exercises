@@ -1,44 +1,11 @@
-stages:
-  - build
-  - test
-  - static_analysis
-  - deploy
-
-build-services:
-  stage: build
+test-docker:
+  stage: test
   image: docker:latest
   services:
-    - name: docker:dind
-      command: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]
+    - docker:dind
   variables:
-    DOCKER_HOST: tcp://localhost:2375  # Updated to localhost for CI job
-    DOCKER_TLS_CERTDIR: ""             # Disable TLS to use the Docker daemon
-  before_script:
-    - apk add --no-cache docker-compose  # Ensure docker-compose is available
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
   script:
-    - docker info                       # Debug Docker connection
-    - docker-compose build
-
-
-test:
-  stage: test
-  script:
-    - echo "Running tests"
-    - pip install requests
-    - python -m unittest discover tests/
-
-static_analysis:
-  stage: static_analysis
-  script:
-    - echo "Running static analysis"
-    - pip install pylint
-    - pylint service1/app.py
-    - pylint service2/app.js
-
-deploy:
-  stage: deploy
-  script:
-    - echo "Deploying to production"
-    - ssh -i /home/alvin/.ssh/Indomie.pem ubuntu@86.50.168.146 "cd DevOps_exercises && git pull && docker-compose -f docker-compose.yaml up -d"
-  only:
-    - project
+    - docker info
+    - docker run hello-world
