@@ -4,21 +4,31 @@ stages:
   - static_analysis
   - deploy
 
-variables:
-  DOCKER_DRIVER: overlay2
-
-build:
+build-services:
   stage: build
+  image: docker:24.0
+  services:
+    - name: docker:24.0-dind
+  variables:
+    DOCKER_HOST: tcp://192.168.65.7:2375
+    DOCKER_DRIVER: overlay2
   script:
-    - echo "Building Docker images"
-    - docker-compose -f docker-compose.yaml build
+    - docker info
+    - docker-compose build
 
 test:
   stage: test
+  image: docker:24.0
+  services:
+    - name: docker:24.0-dind
+  variables:
+    DOCKER_HOST: tcp://192.168.65.7:2375
+    DOCKER_DRIVER: overlay2
   script:
     - echo "Running tests"
-    - pip install requests
-    - python -m unittest discover tests/
+    - docker-compose up
+    - docker build -t tests-image ./tests
+    - docker run --rm tests-image
 
 static_analysis:
   stage: static_analysis
@@ -34,4 +44,4 @@ deploy:
     - echo "Deploying to production"
     - ssh -i /home/alvin/.ssh/Indomie.pem ubuntu@86.50.168.146 "cd DevOps_exercises && git pull && docker-compose -f docker-compose.yaml up -d"
   only:
-    - master
+    - project
