@@ -6,7 +6,7 @@ stages:
 
 build-services:
   stage: build
-  image: docker:latest
+  image: docker:24.0
   services:
     - name: docker:24.0-dind
   variables:
