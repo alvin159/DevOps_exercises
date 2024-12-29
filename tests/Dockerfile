@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Default command to run the tests
-CMD ["pytest", "test_api.py"]
+CMD ["pytest", "-v", "test_api.py"]

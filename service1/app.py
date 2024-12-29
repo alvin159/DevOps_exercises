@@ -1,9 +1,14 @@
-from flask import Flask, request, jsonify
+"""
+This script provides a Flask-based service for managing application states and fetching system information.
+It supports state transitions (INIT, PAUSED, RUNNING, SHUTDOWN), service request simulation, and system data retrieval.
+"""
+
 import logging
 import datetime
 import os
-import psutil
 import subprocess
+import psutil
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
@@ -12,7 +17,11 @@ state = {"current": "INIT"}
 state_log = []
 
 # Logger setup
-logging.basicConfig(filename='state_changes.log', level=logging.INFO, format='%(asctime)s: %(message)s')
+logging.basicConfig(
+    filename='state_changes.log',
+    level=logging.INFO,
+    format='%(asctime)s: %(message)s'
+)
 
 def log_state_change(prev, new):
     """
@@ -43,12 +52,12 @@ def stop_all_containers():
         # Stop each container
         for container_id in running_containers:
             subprocess.check_call(["docker", "stop", container_id])
-            logging.info(f"Stopped container: {container_id}")
+            logging.info("Stopped container: %s", container_id)
 
     except subprocess.CalledProcessError as e:
-        logging.error(f"Error stopping containers: {str(e)}")
+        logging.error("Error stopping containers: %s", str(e))
     except Exception as e:
-        logging.error(f"Unexpected error: {str(e)}")
+        logging.error("Unexpected error: %s", str(e))
 
 @app.route('/state', methods=['PUT'])
 def update_state():
@@ -57,13 +66,12 @@ def update_state():
     Accepts "text/plain" or "application/json" content types.
     Handles special cases like INIT and SHUTDOWN states.
     """
-    global state
     content_type = request.content_type
 
     if content_type == "text/plain":
-        new_state = request.data.decode('utf-8')  # Decode plain text payload
+        new_state = request.data.decode('utf-8')
     elif content_type == "application/json":
-        new_state = request.get_json().get('state')  # Handle JSON payload
+        new_state = request.get_json().get('state')
     else:
         return "Unsupported Media Type", 415
 
@@ -81,9 +89,9 @@ def update_state():
     # Handle special cases
     if new_state == "INIT":
         state_log.clear()
-    elif new_state == "SHUTDOWN":
+    if new_state == "SHUTDOWN":
         logging.info("System is shutting down...")
-        stop_all_containers()  # Stop all running containers
+        stop_all_containers()
 
     return f"State changed to {new_state}", 200
 
@@ -123,25 +131,17 @@ def get_service_info():
 
         if current_state == "PAUSED":
             return "Service unavailable", 503
-        elif current_state == "INIT":
+        if current_state == "INIT":
             return "Service not initialized", 403
-        elif current_state == "SHUTDOWN":
+        if current_state == "SHUTDOWN":
             return "Service has been shut down", 503
 
         # Proceed with fetching service info if the state is RUNNING
-        # Fetch IP address
         ip_address = os.popen("hostname -I").read().strip()
-
-        # Get list of running processes
         processes = [p.info for p in psutil.process_iter(['pid', 'name'])]
-
-        # Get disk usage
         disk_usage = psutil.disk_usage('/')
-
-        # Get system uptime
         uptime = os.popen("cat /proc/uptime").read().split()[0]
 
-        # Build response
         response = {
             "Service": "Service1",
             "IP Address": ip_address,
@@ -149,7 +149,7 @@ def get_service_info():
             "Available Disk Space": disk_usage.free,
             "Uptime (seconds)": uptime
         }
-        
+
         return jsonify(response), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
